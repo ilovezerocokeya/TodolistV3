@@ -52,11 +52,11 @@ const List = () => {
         placeholder="검색어를 입력하세요"
       />
       <div className="todos_wrapper">
-        <h5>하는중...</h5>
+        <h4>하는중...</h4>
         {workingTodos.map((todo) => (
           <TodoItem key={todo.id} {...todo} />
         ))}
-        <h5>다했당!!!</h5>
+        <h4>다했당!!!</h4>
         {doneTodos.map((todo) => (
           <TodoItem key={todo.id} {...todo} />
         ))}

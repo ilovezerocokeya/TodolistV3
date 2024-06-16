@@ -35,6 +35,19 @@
   
   .todos_wrapper {
     width: 100%;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 20px;
+    border: 1px solid rgb(220, 220, 220);
+    border-radius: 5px;
+    background-color: rgb(240, 240, 240); /* 배경색을 설정 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding-left: 20px;
+    padding-right: 20px;
+
+
   }
   
   .todos_wrapper h5 {
