@@ -18,6 +18,13 @@
     font-size: 14px;
     color: gray;
 }
+
+.TodoItem input[type="text"] {
+    flex: 1;
+    margin-right: 10px;
+    padding: 5px;
+    font-size: 16px; /* 크기를 조정합니다 */
+  }
 .TodoItem button {
     cursor: pointer;
     border: none;

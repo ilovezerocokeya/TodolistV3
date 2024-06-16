@@ -1,15 +1,22 @@
 import { memo } from "react";
-import "./Header.css"
+import "./Header.css";
 
 const Header = () => {
+  const date = new Date();
+  const formattedDate = date.toLocaleDateString('ko-KR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).replace(/(\.)/g, '. ');
+
   return (
     <div className='Header'>
-      <h3>오늘은 🗓️</h3>
-      <h1>{new Date().toDateString()}</h1>
+      <h2>오늘은 🗓️</h2>
+      <h1>{formattedDate}</h1>
     </div>
-  )
-}
+  );
+};
 
 const memoizedHeader = memo(Header);
 
-export default memoizedHeader
+export default memoizedHeader;

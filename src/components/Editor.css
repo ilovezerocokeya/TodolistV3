@@ -1,20 +1,25 @@
 .Editor {
     display: flex;
     gap: 10px;
-}
+    margin-bottom: 20px;
+    width: 90%;
+    margin-left: 18%;
+    width: 65%;
 
-.Editor input {
+  }
+  
+  .Editor input {
     flex: 1;
     padding: 15px;
     border: 1px solid rgb(220, 220, 220);
     border-radius: 5px;
-}
-
-.Editor button {
+  }
+  
+  .Editor button {
     cursor: pointer;
     width: 80px;
     border: none;
     background-color: green;
     color: #fff;
     border-radius: 5px;
-}
+  }

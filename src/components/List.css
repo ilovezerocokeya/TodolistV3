@@ -1,23 +1,73 @@
 .List {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-}
-
-.List > input {
+    align-items: center;
+    margin: 0 auto;
+    max-width: 600px; /* 적절한 너비를 설정 */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: #fff; /* 배경색을 설정 */
+  }
+  
+  .List h4 {
+    margin-bottom: 20px;
+  }
+  
+  .List div {
+    margin-bottom: 10px;
+  }
+  
+  .List input {
     width: 100%;
-    border: none;
-    border-bottom: 1px solid rgb(220, 220, 220);
-    padding: 15px 0px
-}
-
-.List > input:focus {
-    outline: none;
-    border-bottom: 1px solid green;
-}
-
-.List .todos_wrapper {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  .board {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
+    gap: 20px;
+    color: green;
+    font: bold 15px arial
+
+  }
+  
+  .todos_wrapper {
+    width: 100%;
+  }
+  
+  .todos_wrapper h5 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .TodoItem {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .TodoItem input[type="checkbox"] {
+    margin-right: 10px;
+  }
+  
+  .TodoItem .content {
+    flex: 1;
+    margin-right: 10px;
+  }
+  
+  .TodoItem .date {
+    margin-right: 10px;
+  }
+  
+  .TodoItem button {
+    margin-left: 5px;
+  }
+  
+  .TodoItem input[type="text"] {
+    flex: 1;
+    margin-right: 10px;
+    padding: 5px;
+    font-size: 16px; /* 크기를 조정합니다 */
+  }

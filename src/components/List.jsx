@@ -4,7 +4,7 @@ import TodoItem from "./TodoItem";
 import { TodoStateContext } from "../App";
 
 const List = () => {
-  const todos  = useContext(TodoStateContext); 
+  const todos = useContext(TodoStateContext); 
   const [search, setSearch] = useState("");
 
   const handleChangeSearch = (e) => {
@@ -35,13 +35,16 @@ const List = () => {
     };
   }, [todos]);
 
+  const workingTodos = filteredTodos.filter((todo) => !todo.isDone);
+  const doneTodos = filteredTodos.filter((todo) => todo.isDone);
+
   return (
     <div className="List">
       <h4>Todo List🌱</h4>
-      <div>
-        <div>total: {totalCount}</div>
-        <div>done: {doneCount}</div>
-        <div>notDone: {notDoneCount}</div>
+      <div className="board">
+        <div>전체: {totalCount}</div>
+        <div>진행중: {notDoneCount}</div>
+        <div>완료: {doneCount}</div>
       </div>
       <input
         value={search}
@@ -49,11 +52,13 @@ const List = () => {
         placeholder="검색어를 입력하세요"
       />
       <div className="todos_wrapper">
-        {filteredTodos.map((todo) => (
-          <TodoItem
-            key={todo.id}
-            {...todo}
-          />
+        <h5>하는중...</h5>
+        {workingTodos.map((todo) => (
+          <TodoItem key={todo.id} {...todo} />
+        ))}
+        <h5>다했당!!!</h5>
+        {doneTodos.map((todo) => (
+          <TodoItem key={todo.id} {...todo} />
         ))}
       </div>
     </div>

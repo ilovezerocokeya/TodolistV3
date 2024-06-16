@@ -4,11 +4,12 @@ import {
   useEffect,
   useReducer,
   useRef,
-  useMemo,
+  useState,
 } from "react";
 import List from "./components/List";
 import Header from "./components/Header";
 import Editor from "./components/Editor";
+import Calendar from "./components/Calendar";
 
 // reducer 함수 정의
 function reducer(state, action) {
@@ -21,6 +22,12 @@ function reducer(state, action) {
       ); // 해당 항목의 isDone 값을 토글
     case "DELETE":
       return state.filter((item) => item.id !== action.targetId); // 해당 항목을 필터링하여 제거
+    case "UPDATE_CONTENT":
+      return state.map((item) =>
+        item.id === action.targetId ? { ...item, content: action.newContent } : item
+      ); // 해당 항목의 content 값을 업데이트
+    case "SET_TODOS":
+      return action.todos; // 새로운 투두리스트로 설정
     default:
       return state; // 기본적으로 현재 상태를 반환
   }
@@ -30,28 +37,27 @@ export const TodoStateContext = createContext();
 export const TodoDispatchContext = createContext();
 
 const App = () => {
-  // 로컬 스토리지에서 초기 상태를 가져옴
-  const [todos, dispatch] = useReducer(reducer, [], () => {
-    const savedTodos = localStorage.getItem("todos");
-    return savedTodos ? JSON.parse(savedTodos) : [];
-  });
+  const [todos, dispatch] = useReducer(reducer, []);
+  const [currentDate, setCurrentDate] = useState(new Date().toISOString().split("T")[0]);
 
-  // ID 레퍼런스를 초기화
-  const idRef = useRef(
-    todos.length > 0 ? Math.max(...todos.map((todo) => todo.id)) + 1 : 1
-  );
-
-  // todos 상태가 변경될 때마다 로컬 스토리지에 저장
   useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
+    const savedTodos = localStorage.getItem(`todos_${currentDate}`);
+    if (savedTodos) {
+      dispatch({ type: "SET_TODOS", todos: JSON.parse(savedTodos) });
+    } else {
+      dispatch({ type: "SET_TODOS", todos: [] });
+    }
+  }, [currentDate]);
 
-  // 새로운 Todo 항목을 생성하는 함수
+  useEffect(() => {
+    localStorage.setItem(`todos_${currentDate}`, JSON.stringify(todos));
+  }, [todos, currentDate]);
+
   const handleCreate = useCallback((content) => {
     dispatch({
       type: "CREATE",
       data: {
-        id: idRef.current++,
+        id: Date.now(),
         content,
         isDone: false,
         date: new Date().getTime(),
@@ -59,7 +65,6 @@ const App = () => {
     });
   }, []);
 
-  // Todo 항목의 isDone 값을 토글하는 함수
   const handleUpdate = useCallback((targetId) => {
     dispatch({
       type: "UPDATE",
@@ -67,7 +72,6 @@ const App = () => {
     });
   }, []);
 
-  // Todo 항목을 삭제하는 함수
   const handleDelete = useCallback((targetId) => {
     dispatch({
       type: "DELETE",
@@ -75,17 +79,25 @@ const App = () => {
     });
   }, []);
 
-  const memoizedDispatch = useMemo(() => {
-    return { handleCreate, handleUpdate, handleDelete }
+  const handleUpdateContent = useCallback((targetId, newContent) => {
+    dispatch({
+      type: "UPDATE_CONTENT",
+      targetId,
+      newContent,
+    });
   }, []);
 
-  return (
-    <div className="App">
-      <Header />
+  const handleDateChange = (date) => {
+    setCurrentDate(date);
+  };
 
+  return (
+    <div className="App container">
+      <Header />
+      <Calendar currentDate={currentDate} onDateChange={handleDateChange} />
       <TodoStateContext.Provider value={todos}>
         <TodoDispatchContext.Provider
-          value={memoizedDispatch}
+          value={{ handleCreate, handleUpdate, handleDelete, handleUpdateContent }}
         >
           <Editor />
           <List />
