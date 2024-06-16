@@ -3,7 +3,6 @@ import {
   useCallback,
   useEffect,
   useReducer,
-  useRef,
   useState,
 } from "react";
 import List from "./components/List";
@@ -15,33 +14,42 @@ import Calendar from "./components/Calendar";
 function reducer(state, action) {
   switch (action.type) {
     case "CREATE":
-      return [action.data, ...state]; // 새로운 항목을 앞에 추가
+      return [action.data, ...state];
     case "UPDATE":
       return state.map((item) =>
         item.id === action.targetId ? { ...item, isDone: !item.isDone } : item
-      ); // 해당 항목의 isDone 값을 토글
+      );
     case "DELETE":
-      return state.filter((item) => item.id !== action.targetId); // 해당 항목을 필터링하여 제거
+      return state.filter((item) => item.id !== action.targetId);
     case "UPDATE_CONTENT":
       return state.map((item) =>
         item.id === action.targetId ? { ...item, content: action.newContent } : item
-      ); // 해당 항목의 content 값을 업데이트
+      );
     case "SET_TODOS":
-      return action.todos; // 새로운 투두리스트로 설정
+      return action.todos;
     default:
-      return state; // 기본적으로 현재 상태를 반환
+      return state;
   }
+}
+
+// 로컬 스토리지에서 초기 상태 가져오기
+const getInitialTodos = (currentDate) => {
+  const savedTodos = localStorage.getItem(`todos_${currentDate}`);
+  console.log(`Fetching todos for date: ${currentDate}`, savedTodos); // 디버깅 로그 추가
+  return savedTodos ? JSON.parse(savedTodos) : [];
 }
 
 export const TodoStateContext = createContext();
 export const TodoDispatchContext = createContext();
 
 const App = () => {
-  const [todos, dispatch] = useReducer(reducer, []);
   const [currentDate, setCurrentDate] = useState(new Date().toISOString().split("T")[0]);
+  const [todos, dispatch] = useReducer(reducer, [], () => getInitialTodos(currentDate));
 
+  // currentDate가 변경될 때 로컬 스토리지에서 데이터를 가져옴
   useEffect(() => {
     const savedTodos = localStorage.getItem(`todos_${currentDate}`);
+    console.log(`Fetching todos for date: ${currentDate}`, savedTodos); // 디버깅 로그 추가
     if (savedTodos) {
       dispatch({ type: "SET_TODOS", todos: JSON.parse(savedTodos) });
     } else {
@@ -49,7 +57,9 @@ const App = () => {
     }
   }, [currentDate]);
 
+  // todos 상태가 변경될 때 로컬 스토리지에 저장
   useEffect(() => {
+    console.log(`Saving todos for date: ${currentDate}`, todos); // 디버깅 로그 추가
     localStorage.setItem(`todos_${currentDate}`, JSON.stringify(todos));
   }, [todos, currentDate]);
 
